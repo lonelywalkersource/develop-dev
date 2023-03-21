@@ -5,8 +5,8 @@ services:
     hostname: php-develop
     build: php-fpm/php${PHP_VERSION}
     volumes:
+      - .php-fpm/php${PHP_VERSION}/php.ini-development:/usr/local/etc/php/php.ini
       - ${PHP_VOLUMES_PROJECT}:/var/www:cached
-      - ${PHP_VOLUMES_INI}:/usr/local/etc/php/php.ini
     depends_on:
       - nginx
       - redis
