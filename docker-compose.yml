@@ -1,6 +1,6 @@
 version: "3"
 services:
-  php_fpm:
+  php-fpm:
     container_name: php-app
     hostname: php-develop
     build: php-fpm/php${PHP_VERSION}
