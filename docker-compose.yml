@@ -1,0 +1,77 @@
+version: "3"
+services:
+  php_fpm:
+    container_name: php-app
+    hostname: php-develop
+    build: php-fpm/php${PHP_VERSION}
+    volumes:
+      - ${PHP_VOLUMES_PROJECT}:/var/www:cached
+      - ${PHP_VOLUMES_INI}:/usr/local/etc/php/php.ini
+    depends_on:
+      - nginx
+      - redis
+      - mysql
+    ports:
+      - 9000:9000
+      - 9502:9502
+    networks:
+      - backend
+  nginx:
+    container_name: nginx-app
+    hostname: nginx-develop
+    image: nginx
+    volumes:
+      - ${NGINX_VOLUMES_LOGS}:/var/log/nginx # NGINX LOG 文件
+      - ${NGINX_VOLUMES_CONFIG}:/etc/nginx/nginx.conf # NGINX 配置文件
+      - ${NGINX_VOLUMES_CONFIG_D}:/etc/nginx/conf.d/ # NGINX 配置文件
+      - ${PHP_VOLUMES_PROJECT}:/var/www:cached # 工作目录
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - backend
+  mysql:
+    container_name: mysql-app
+    hostname: mysql-develop
+    image: mysql:5.7.37
+    volumes:
+      - ${MYSQL_VOLUMES_DATA}:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    restart: always
+    ports:
+      - 3306:3306
+    networks:
+      - backend
+  redis:
+    container_name: redis-app
+    hostname: redis-develop
+    image: redis
+    volumes:
+      - ${REDIS_VOLUMES_DATA}:/data
+      - ./redis/config/redis.conf:/etc/redis/redis.conf
+    tty: true
+    restart: always
+    sysctls:
+      - net.core.somaxconn=2048
+    networks:
+      - backend
+    ports:
+      - "6379:6379"
+    environment:
+      - TZ=Asia/Shanghai
+      - LANG=en_US.UTF-8
+    command: redis-server /etc/redis/redis.conf --requirepass root
+  # 定时任务
+#  cron:
+#    image: mcuadros/ofelia:latest
+#    container_name: cron-app
+#    hostname: cron-app
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock:ro
+#      - ./cron:/etc/ofelia
+#    networks:
+#      - backend
+networks:
+  backend:
+    driver: bridge

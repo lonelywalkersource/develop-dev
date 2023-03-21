@@ -1,0 +1,4 @@
+/.idea
+.env
+/nginx/logs
+/cron/config.ini

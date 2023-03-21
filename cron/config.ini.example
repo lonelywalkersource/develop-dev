@@ -1,0 +1,4 @@
+[job-exec "schedule"]
+container = php-app
+schedule = @every 60s
+command= php /var/www/laravel/artisan schedule:run
