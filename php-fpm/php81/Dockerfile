@@ -4,7 +4,7 @@ LABEL maintainer="Walker-Distance"
 
 USER root
 # 更换源为国内镜像
-ADD sources.txt /etc/apt/
+ADD sources.list /etc/apt/
 
 RUN apt-get update -y && apt-get install -y zlib1g=1:1.2.8.dfsg-5 --allow-downgrades \
     && apt-get install -y  git libz-dev libzip-dev libfreetype6-dev libmcrypt-dev  libjpeg-dev libpng-dev libwebp-dev

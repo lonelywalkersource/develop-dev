@@ -4,7 +4,7 @@ LABEL maintainer="Walker-Distance"
 
 USER root
 # 更换源为国内镜像
-ADD sources.txt /etc/apt/
+ADD sources.list /etc/apt/
 
 RUN apt-get update -y  \
     && apt-get install -y procps \
