@@ -5,7 +5,7 @@ services:
     hostname: php-develop
     build: php-fpm/php${PHP_VERSION}
     volumes:
-      - .php-fpm/php${PHP_VERSION}/php.ini-development:/usr/local/etc/php/php.ini
+      - ./php-fpm/php${PHP_VERSION}/php.ini-development:/usr/local/etc/php/php.ini
       - ${PHP_VOLUMES_PROJECT}:/var/www:cached
     depends_on:
       - nginx
@@ -26,7 +26,7 @@ services:
       - ${NGINX_VOLUMES_CONFIG_D}:/etc/nginx/conf.d/ # NGINX 配置文件
       - ${PHP_VOLUMES_PROJECT}:/var/www:cached # 工作目录
     ports:
-      - 80:80
+      - 81:80
       - 443:443
     networks:
       - backend
