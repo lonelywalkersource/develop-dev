@@ -46,7 +46,7 @@ services:
   redis:
     container_name: redis-app
     hostname: redis-develop
-    image: redis
+    image: redis:7.0.12
     volumes:
       - ${REDIS_VOLUMES_DATA}:/data
       - ./redis/config/redis.conf:/etc/redis/redis.conf
