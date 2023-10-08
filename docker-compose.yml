@@ -8,7 +8,6 @@ services:
       - ./php-fpm/php${PHP_VERSION}/php.ini-development:/usr/local/etc/php/php.ini
       - ${PHP_VOLUMES_PROJECT}:/var/www:cached
     depends_on:
-      - nginx
       - redis
       - mysql
     ports:
@@ -30,6 +29,8 @@ services:
       - 443:443
     networks:
       - backend
+    depends_on:
+      - php-fpm
   mysql:
     container_name: mysql-app
     hostname: mysql-develop
