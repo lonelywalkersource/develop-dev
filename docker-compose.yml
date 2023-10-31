@@ -10,9 +10,8 @@ services:
     depends_on:
       - redis
       - mysql
-    ports:
-      - 9000:9000
-      - 9502:9502
+    expose:
+      - 9000
     networks:
       - backend
   nginx:
@@ -25,7 +24,7 @@ services:
       - ${NGINX_VOLUMES_CONFIG_D}:/etc/nginx/conf.d/ # NGINX 配置文件
       - ${PHP_VOLUMES_PROJECT}:/var/www:cached # 工作目录
     ports:
-      - 81:80
+      - 80:80
       - 443:443
     networks:
       - backend
