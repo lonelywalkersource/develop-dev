@@ -3,8 +3,6 @@ FROM php:7.4.33-fpm
 LABEL maintainer="Walker-Distance"
 
 USER root
-# 更换源为国内镜像
-ADD sources.list /etc/apt/
 
 RUN apt-get update -y  \
     && apt-get install -y procps \
