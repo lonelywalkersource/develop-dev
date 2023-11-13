@@ -1,7 +1,7 @@
 version: "3"
 services:
   nginx:
-    container_name: nginx-app
+    container_name: app-nginx
     hostname: nginx-develop
     image: nginx
     volumes:
@@ -18,7 +18,7 @@ services:
       - php-fpm
     restart: always
   php-fpm:
-    container_name: php-app
+    container_name: app-php
     hostname: php-develop
     build: php-fpm/php${PHP_VERSION}
     volumes:
@@ -32,7 +32,7 @@ services:
     networks:
       - backend
   mysql:
-    container_name: mysql-app
+    container_name: app-mysql
     hostname: mysql-develop
     image: mysql:5.7.37
     volumes:
@@ -44,7 +44,7 @@ services:
     networks:
       - backend
   redis:
-    container_name: redis-app
+    container_name: app-redis
     hostname: redis-develop
     image: redis:7.0.12
     volumes:
@@ -64,7 +64,7 @@ services:
   # 定时任务
 #  cron:
 #    image: mcuadros/ofelia:latest
-#    container_name: cron-app
+#    container_name: app-cron
 #    hostname: cron-app
 #    volumes:
 #      - /var/run/docker.sock:/var/run/docker.sock:ro
