@@ -1,19 +1,5 @@
 version: "3"
 services:
-  php-fpm:
-    container_name: php-app
-    hostname: php-develop
-    build: php-fpm/php${PHP_VERSION}
-    volumes:
-      - ./php-fpm/php${PHP_VERSION}/php.ini-development:/usr/local/etc/php/php.ini
-      - ${PHP_VOLUMES_PROJECT}:/var/www:cached
-    depends_on:
-      - redis
-      - mysql
-    expose:
-      - 9000
-    networks:
-      - backend
   nginx:
     container_name: nginx-app
     hostname: nginx-develop
@@ -30,6 +16,21 @@ services:
       - backend
     depends_on:
       - php-fpm
+    restart: always
+  php-fpm:
+    container_name: php-app
+    hostname: php-develop
+    build: php-fpm/php${PHP_VERSION}
+    volumes:
+      - ./php-fpm/php${PHP_VERSION}/php.ini-development:/usr/local/etc/php/php.ini
+      - ${PHP_VOLUMES_PROJECT}:/var/www:cached
+    depends_on:
+      - redis
+      - mysql
+    ports:
+      - 9000:9000
+    networks:
+      - backend
   mysql:
     container_name: mysql-app
     hostname: mysql-develop
@@ -38,7 +39,6 @@ services:
       - ${MYSQL_VOLUMES_DATA}:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=root
-    restart: always
     ports:
       - 3306:3306
     networks:
@@ -51,7 +51,6 @@ services:
       - ${REDIS_VOLUMES_DATA}:/data
       - ./redis/config/redis.conf:/etc/redis/redis.conf
     tty: true
-    restart: always
     sysctls:
       - net.core.somaxconn=2048
     networks:
