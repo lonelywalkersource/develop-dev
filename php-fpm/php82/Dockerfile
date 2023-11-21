@@ -17,7 +17,8 @@ RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/i
     && docker-php-ext-install sockets \
     && docker-php-ext-install pcntl \
     && docker-php-ext-install pdo_mysql \
-    && pecl install swoole &&  docker-php-ext-enable swoole
+    && pecl install swoole  \
+    && docker-php-ext-enable swoole
 
 RUN php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');" \
     && php composer-setup.php \
