@@ -31,6 +31,7 @@ services:
       - 9000:9000
     networks:
       - backend
+    user: www-data
   mysql:
     container_name: app-mysql
     hostname: mysql-develop
