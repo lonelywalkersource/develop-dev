@@ -6,7 +6,7 @@ USER root
 
 RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shanghai' >/etc/timezone
 
-RUN apt-get update -y &&  apt-get install -y  git libz-dev libzip-dev libfreetype6-dev libgmp-dev libmcrypt-dev  libjpeg-dev libpng-dev
+RUN apt-get update -y &&  apt-get install -y git libz-dev libzip-dev libfreetype6-dev libgmp-dev libmcrypt-dev  libjpeg-dev libpng-dev libpq-dev
 
 RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd \
@@ -17,6 +17,8 @@ RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/i
     && docker-php-ext-install sockets \
     && docker-php-ext-install pcntl \
     && docker-php-ext-install pdo_mysql \
+    && docker-php-ext-install pgsql \
+    && docker-php-ext-install pdo_pgsql \
     && pecl install swoole  \
     && docker-php-ext-enable swoole
 

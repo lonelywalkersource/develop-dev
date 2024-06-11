@@ -2,7 +2,7 @@ version: "3"
 services:
   nginx:
     container_name: app-nginx
-    hostname: nginx-develop
+    hostname: develop-nginx
     image: nginx
     volumes:
       - ${NGINX_VOLUMES_LOGS}:/var/log/nginx # NGINX LOG 文件
@@ -10,8 +10,8 @@ services:
       - ${NGINX_VOLUMES_CONFIG_D}:/etc/nginx/conf.d/ # NGINX 配置文件
       - ${PHP_VOLUMES_PROJECT}:/var/www:cached # 工作目录
     ports:
-      - 80:80
-      - 443:443
+      - "80:80"
+      - "443:443"
     networks:
       - backend
     depends_on:
@@ -19,7 +19,7 @@ services:
     restart: always
   php-fpm:
     container_name: app-php
-    hostname: php-develop
+    hostname: develop-php
     build: php-fpm/php${PHP_VERSION}
     volumes:
       - ./php-fpm/php${PHP_VERSION}/php.ini-development:/usr/local/etc/php/php.ini
@@ -27,26 +27,31 @@ services:
     depends_on:
       - redis
       - mysql
+      - clickhouse
+      - pgsql
     ports:
-      - 9000:9000
+      - "9000:9000"
+      - "8445:8445"
     networks:
       - backend
     user: www-data
+    restart: always
   mysql:
     container_name: app-mysql
-    hostname: mysql-develop
+    hostname: develop-mysql
     image: mysql:5.7.37
     volumes:
       - ${MYSQL_VOLUMES_DATA}:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=root
     ports:
-      - 3306:3306
+      - "3306:3306"
     networks:
       - backend
+    restart: always
   redis:
     container_name: app-redis
-    hostname: redis-develop
+    hostname: develop-redis
     image: redis:7.0.12
     volumes:
       - ${REDIS_VOLUMES_DATA}:/data
@@ -62,16 +67,44 @@ services:
       - TZ=Asia/Shanghai
       - LANG=en_US.UTF-8
     command: redis-server /etc/redis/redis.conf --requirepass root
-  # 定时任务
-#  cron:
-#    image: mcuadros/ofelia:latest
-#    container_name: app-cron
-#    hostname: cron-app
-#    volumes:
-#      - /var/run/docker.sock:/var/run/docker.sock:ro
-#      - ./cron:/etc/ofelia
-#    networks:
-#      - backend
+    restart: always
+  pgsql:
+    image: postgres:14.4-alpine
+    container_name: app-pgsql
+    hostname: develop-pgsql
+    ports:
+      - "5432:5432"
+    volumes:
+      - ${PGSQL_VOLUMES_DATA}:/var/lib/postgresql:rw
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=local_access
+      - TZ=Asia/Shanghai
+      - PGTZ=Asia/Shanghai
+    restart: always
+    networks:
+      - backend
+  clickhouse:
+    image: clickhouse/clickhouse-server
+    container_name: app-clickhouse
+    hostname: develop-clickhouse
+    ports:
+      - "8126:8123"
+      - "9004:9000"
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    volumes:
+      - ${CLICKHOUSE_VOLUMES_DATA}:/var/lib/clickhouse
+    environment:
+      - TZ=Asia/Shanghai
+      - CLICKHOUSE_DB=local_data
+      - CLICKHOUSE_USER=root
+      - CLICKHOUSE_PASSWORD=root
+      - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
+    restart: always
 networks:
   backend:
     driver: bridge
