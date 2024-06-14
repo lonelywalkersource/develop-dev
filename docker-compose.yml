@@ -69,19 +69,20 @@ services:
     command: redis-server /etc/redis/redis.conf --requirepass root
     restart: always
   pgsql:
-    image: postgres:14.4-alpine
+    image: postgres:latest
     container_name: app-pgsql
     hostname: develop-pgsql
+    user: "1000:1000"
     ports:
       - "5432:5432"
     volumes:
-      - ${PGSQL_VOLUMES_DATA}:/var/lib/postgresql:rw
+      - ${PGSQL_VOLUMES_DATA}:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
       - POSTGRES_DB=local_access
       - TZ=Asia/Shanghai
-      - PGTZ=Asia/Shanghai
+#      - DATABASE_ALREADY_EXISTS=false # 第一次启动时 需要创建数据库 故而设置为 false 之后启动则需要设置为 true
     restart: always
     networks:
       - backend
@@ -90,21 +91,20 @@ services:
     container_name: app-clickhouse
     hostname: develop-clickhouse
     ports:
-      - "8126:8123"
-      - "9004:9000"
-    ulimits:
-      nofile:
-        soft: 262144
-        hard: 262144
+      - "8123:8123"
     volumes:
-      - ${CLICKHOUSE_VOLUMES_DATA}:/var/lib/clickhouse
+      - ${CLICKHOUSE_VOLUMES_DATA}:/var/lib/clickhouse/
+      - ./clickhouse/users/:/etc/clickhouse-server/users.d/
     environment:
       - TZ=Asia/Shanghai
-      - CLICKHOUSE_DB=local_data
-      - CLICKHOUSE_USER=root
-      - CLICKHOUSE_PASSWORD=root
-      - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
     restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: "1"
+    networks:
+      - backend
 networks:
   backend:
     driver: bridge
