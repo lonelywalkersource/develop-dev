@@ -11,6 +11,7 @@ RUN apt-get update -y &&  apt-get install -y git libz-dev libzip-dev libfreetype
 RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-enable gd \
+    && docker-php-ext-enable exif \
     && docker-php-ext-install zip \
     && docker-php-ext-install gmp \
     && docker-php-ext-install bcmath \
