@@ -27,7 +27,10 @@ RUN php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.ph
     && php composer-setup.php \
     && rm -f composer-setup.php \
     && mv composer.phar /usr/local/bin/composer \
-    && composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
+    && composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/ \
+    && composer global config vendor-dir "/usr/local/composer-global/vendor"  \
+    && composer global config bin-dir "/usr/local/composer-global/bin"  \
+    && composer global require laravel/pint
 
 COPY php.ini-development /usr/local/etc/php/php.ini
 
