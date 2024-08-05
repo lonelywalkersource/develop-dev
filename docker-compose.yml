@@ -27,7 +27,6 @@ services:
     depends_on:
       - redis
       - mysql
-      - clickhouse
       - pgsql
     ports:
       - "9000:9000"

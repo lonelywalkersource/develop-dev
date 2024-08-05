@@ -6,7 +6,7 @@ USER root
 
 RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shanghai' >/etc/timezone
 
-RUN apt-get update -y &&  apt-get install -y git libz-dev libzip-dev libfreetype6-dev libgmp-dev libmcrypt-dev  libjpeg-dev libpng-dev libpq-dev
+RUN apt-get update -y &&  apt-get install -y git libz-dev libzip-dev libfreetype6-dev libgmp-dev libmcrypt-dev libjpeg-dev libpng-dev libpq-dev libcurl4-openssl-dev libevent-dev
 
 RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd \
@@ -21,7 +21,9 @@ RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/i
     && docker-php-ext-install pgsql \
     && docker-php-ext-install pdo_pgsql \
     && pecl install swoole  \
-    && docker-php-ext-enable swoole
+    && docker-php-ext-enable swoole \
+    && pecl install redis \
+    && docker-php-ext-enable redis
 
 RUN php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');" \
     && php composer-setup.php \
@@ -34,7 +36,7 @@ RUN php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.ph
 
 COPY php.ini-development /usr/local/etc/php/php.ini
 
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && rm /var/log/lastlog /var/log/faillog
+RUN apt-get clean && rm -rf /var/cache/apk/* && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && rm /var/log/lastlog /var/log/faillog
 
 RUN usermod -u 1000 -s /bin/bash www-data
 
