@@ -27,7 +27,6 @@ services:
     depends_on:
       - redis
       - mysql
-      - pgsql
     ports:
       - "9000:9000"
       - "8445:8445"
@@ -67,43 +66,42 @@ services:
       - LANG=en_US.UTF-8
     command: redis-server /etc/redis/redis.conf --requirepass root
     restart: always
-  pgsql:
-    image: postgres:latest
-    container_name: app-pgsql
-    hostname: develop-pgsql
-    user: "1000:1000"
-    ports:
-      - "5432:5432"
-    volumes:
-      - ${PGSQL_VOLUMES_DATA}:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=root
-      - POSTGRES_DB=local_access
-      - TZ=Asia/Shanghai
-#      - DATABASE_ALREADY_EXISTS=false # 第一次启动时 需要创建数据库 故而设置为 false 之后启动则需要设置为 true
-    restart: always
-    networks:
-      - backend
-  clickhouse:
-    image: clickhouse/clickhouse-server
-    container_name: app-clickhouse
-    hostname: develop-clickhouse
-    ports:
-      - "8123:8123"
-    volumes:
-      - ${CLICKHOUSE_VOLUMES_DATA}:/var/lib/clickhouse/
-      - ./clickhouse/users/:/etc/clickhouse-server/users.d/
-    environment:
-      - TZ=Asia/Shanghai
-    restart: always
-    deploy:
-      resources:
-        limits:
-          memory: 4G
-          cpus: "1"
-    networks:
-      - backend
+#  pgsql:
+#    image: postgres:latest
+#    container_name: app-pgsql
+#    hostname: develop-pgsql
+#    ports:
+#      - "5432:5432"
+#    volumes:
+#      - ${PGSQL_VOLUMES_DATA}:/var/lib/postgresql/data
+#    environment:
+#      - POSTGRES_USER=root
+#      - POSTGRES_PASSWORD=root
+#      - POSTGRES_DB=local_access
+#      - TZ=Asia/Shanghai
+##      - DATABASE_ALREADY_EXISTS=true # 第一次启动时 需要创建数据库 故而设置为 false 之后启动则需要设置为 true
+#    restart: always
+#    networks:
+#      - backend
+#  clickhouse:
+#    image: clickhouse/clickhouse-server
+#    container_name: app-clickhouse
+#    hostname: develop-clickhouse
+#    ports:
+#      - "8123:8123"
+#    volumes:
+#      - ${CLICKHOUSE_VOLUMES_DATA}:/var/lib/clickhouse/
+#      - ./clickhouse/users/:/etc/clickhouse-server/users.d/
+#    environment:
+#      - TZ=Asia/Shanghai
+#    restart: always
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 4G
+#          cpus: "1"
+#    networks:
+#      - backend
 networks:
   backend:
     driver: bridge
