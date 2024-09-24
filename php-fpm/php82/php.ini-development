@@ -1923,3 +1923,9 @@ opcache.jit_buffer_size=200M
 ; Local Variables:
 ; tab-width: 4
 ; End:
+
+[xdebug]
+xdebug.mode=debug
+xdebug.client_host=host.docker.internal
+xdebug.client_port=9003
+xdebug.start_with_request=yes
