@@ -29,6 +29,7 @@ services:
       - mysql
     ports:
       - "9000:9000"
+      - "9003:9003"
       - "8445:8445"
     networks:
       - backend
