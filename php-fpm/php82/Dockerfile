@@ -23,7 +23,9 @@ RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/i
     && pecl install swoole  \
     && docker-php-ext-enable swoole \
     && pecl install redis \
-    && docker-php-ext-enable redis
+    && docker-php-ext-enable redis \
+    && pecl install xdebug \
+    && docker-php-ext-enable xdebug
 
 RUN php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');" \
     && php composer-setup.php \
