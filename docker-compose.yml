@@ -20,7 +20,7 @@ services:
   php-fpm:
     container_name: app-php
     hostname: develop-php
-    build: php-fpm/php${PHP_VERSION}
+    image: lyswalker/custom-php-fpm-8.2.11:1.0.1
     volumes:
       - ./php-fpm/php${PHP_VERSION}/php.ini-development:/usr/local/etc/php/php.ini
       - ${PHP_VOLUMES_PROJECT}:/var/www:cached

@@ -6,7 +6,7 @@ USER root
 
 RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shanghai' >/etc/timezone
 
-RUN apt-get update -y &&  apt-get install -y git libz-dev libzip-dev libfreetype6-dev libgmp-dev libmcrypt-dev libjpeg-dev libpng-dev libpq-dev libcurl4-openssl-dev libevent-dev
+RUN apt-get update -y &&  apt-get install -y git libz-dev libzip-dev libfreetype6-dev libgmp-dev libmcrypt-dev libjpeg-dev libpng-dev libpq-dev libcurl4-openssl-dev libevent-dev libssh2-1-dev
 
 RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd \
@@ -24,6 +24,8 @@ RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/i
     && docker-php-ext-enable swoole \
     && pecl install redis \
     && docker-php-ext-enable redis \
+    && pecl install ssh2 \
+    && docker-php-ext-enable ssh2 \
     && pecl install xdebug \
     && docker-php-ext-enable xdebug \
     && docker-php-source delete
