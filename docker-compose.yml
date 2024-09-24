@@ -38,7 +38,7 @@ services:
   mysql:
     container_name: app-mysql
     hostname: develop-mysql
-    image: mysql:5.7.37
+    image: mysql:8.0.32
     volumes:
       - ${MYSQL_VOLUMES_DATA}:/var/lib/mysql
     environment:
@@ -54,7 +54,7 @@ services:
     image: redis:7.0.12
     volumes:
       - ${REDIS_VOLUMES_DATA}:/data
-      - ./redis/config/redis.conf:/etc/redis/redis.conf
+      - ${REDIS_VOLUMES_CONFIG}:/etc/redis/redis.conf
     tty: true
     sysctls:
       - net.core.somaxconn=2048
