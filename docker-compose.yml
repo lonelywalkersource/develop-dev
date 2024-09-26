@@ -22,7 +22,7 @@ services:
     hostname: develop-php
     image: lyswalker/custom-php-fpm-8.2.11:1.0.1
     volumes:
-      - ./php-fpm/php${PHP_VERSION}/php.ini-development:/usr/local/etc/php/php.ini
+      - ./php-fpm/php82/php.ini-development:/usr/local/etc/php/php.ini
       - ${PHP_VOLUMES_PROJECT}:/var/www:cached
     depends_on:
       - redis
