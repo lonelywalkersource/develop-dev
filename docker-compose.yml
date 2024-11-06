@@ -22,13 +22,13 @@ services:
     image: lyswalker/custom-php-fpm-8.2.11:1.0.1
     volumes:
       - ./php-fpm/php82/php.ini-development:/usr/local/etc/php/php.ini
+      - ./php-fpm/php82/docker-php-ext-xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
       - ${PHP_VOLUMES_PROJECT}:/var/www:cached
     depends_on:
       - redis
       - mysql
     ports:
       - "9000:9000"
-      - "9003:9003"
       - "8445:8445"
     networks:
       - backend
